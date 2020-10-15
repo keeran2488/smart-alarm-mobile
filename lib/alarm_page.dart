@@ -6,7 +6,8 @@ class AlarmPage extends StatefulWidget {
 }
 
 class _AlarmPageState extends State<AlarmPage> {
-  final List<String> alarms = <String>['Alarm 1', 'Alarm 2', 'Alarm 3'];
+  final List<TimeOfDay> alarms = <TimeOfDay>[];
+  var isSwitched = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,30 +22,127 @@ class _AlarmPageState extends State<AlarmPage> {
         child: ListView.separated(
           padding: EdgeInsets.all(10.0),
           itemBuilder: (BuildContext context, int index) {
-            return Column(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      height: 100.0,
-                      child: Text(alarms[index]),
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(left: 11),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "${alarms[index].hour} : ${alarms[index].minute}",
+                          style: TextStyle(
+                              color: (isSwitched[index] == true)
+                                  ? Colors.blue
+                                  : Colors.grey,
+                              fontSize: 26.0),
+                        ),
+                        Switch(
+                          value: isSwitched[index],
+                          onChanged: (value) {
+                            setState(() {
+                              isSwitched[index] = value;
+                            });
+                          },
+                        ),
+                      ],
                     ),
-                  ],
-                )
-              ],
+                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Text(
+                  //       "Every day",
+                  //       style: TextStyle(color: Colors.white),
+                  //     ),
+                  //   ],
+                  // )
+                  ExpansionTile(
+                    childrenPadding: EdgeInsets.only(top: 10, bottom: 20),
+                    title: Text(
+                      "Every day",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text(
+                            "S",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          Text(
+                            "M",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          Text(
+                            "T",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          Text(
+                            "W",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          Text(
+                            "T",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          Text(
+                            "F",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          Text(
+                            "S",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(right: 14),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             );
           },
           itemCount: alarms.length,
-          separatorBuilder: (BuildContext context, int index) => Divider(),
+          separatorBuilder: (BuildContext context, int index) => Divider(
+            color: Colors.grey,
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: timePicker,
         child: Icon(Icons.add),
         backgroundColor: Colors.blue,
       ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
     );
+  }
+
+  void timePicker() async {
+    TimeOfDay selectedTime =
+        await showTimePicker(initialTime: TimeOfDay.now(), context: context);
+    if (selectedTime != null) {
+      setState(() {
+        alarms.add(selectedTime);
+        isSwitched.add(true);
+      });
+    }
   }
 }

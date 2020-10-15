@@ -27,6 +27,7 @@ class _NewsPageState extends State<NewsPage> {
         centerTitle: true,
         backgroundColor: Color(0xFF2D2F41),
       ),
+      backgroundColor: Color(0xFF2D2F41),
       body: Container(
         child: FutureBuilder<NewsModel>(
           future: _newsModel,
@@ -37,53 +38,49 @@ class _NewsPageState extends State<NewsPage> {
                   itemBuilder: (context, index) {
                     var article = snapshot.data.articles[index];
                     return Card(
-                      margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 10.0),
+                      margin: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 15.0),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Flexible(
-                        child: Container(
-                          color: Color(0xFF2D2F41),
-                          height: 400.0,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              AspectRatio(
-                                aspectRatio: 1.7,
-                                child: CachedNetworkImage(
-                                  imageUrl: article.urlToImage,
-                                  fit: BoxFit.cover,
-                                ),
+                      child: Container(
+                        color: Color(0xFF191a24),
+                        height: 400.0,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            AspectRatio(
+                              aspectRatio: 1.7,
+                              child: CachedNetworkImage(
+                                imageUrl: article.urlToImage,
+                                fit: BoxFit.cover,
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                                child: InkWell(
-                                  child: Text(
-                                    article.title,
-                                    maxLines: 3,
-                                    overflow: TextOverflow.fade,
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 20),
-                                  ),
-                                  onTap: () {
-                                    _lauchURL(article.url);
-                                  },
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 8, 10, 5),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                              child: InkWell(
                                 child: Text(
-                                  article.description,
+                                  article.title,
                                   maxLines: 3,
+                                  overflow: TextOverflow.fade,
                                   style: TextStyle(
-                                      color: Colors.grey, fontSize: 16),
-                                  overflow: TextOverflow.ellipsis,
+                                      color: Colors.white, fontSize: 20),
                                 ),
+                                onTap: () {
+                                  _lauchURL(article.url);
+                                },
                               ),
-                            ],
-                          ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 8, 10, 5),
+                              child: Text(
+                                article.description,
+                                maxLines: 3,
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 16),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     );
