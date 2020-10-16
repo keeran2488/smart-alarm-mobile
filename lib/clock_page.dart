@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:smartClockFinal/clock_view.dart';
 import 'package:intl/intl.dart';
@@ -8,7 +10,6 @@ class ClockPage extends StatefulWidget {
 }
 
 class _ClockPageState extends State<ClockPage> {
-  var _formattedTime = DateFormat('HH:mm').format(DateTime.now());
   var _formattedDate = DateFormat('EEE, d MMM').format(DateTime.now());
 
   @override
@@ -25,13 +26,7 @@ class _ClockPageState extends State<ClockPage> {
         alignment: Alignment.center,
         child: Column(
           children: [
-            Text(
-              _formattedTime,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 50.0,
-              ),
-            ),
+            DigitalClockBuild(),
             SizedBox(
               height: 6.0,
             ),
@@ -50,6 +45,39 @@ class _ClockPageState extends State<ClockPage> {
         ),
       ),
       backgroundColor: Color(0xFF2D2F41),
+    );
+  }
+}
+
+class DigitalClockBuild extends StatefulWidget {
+  @override
+  _DigitalClockBuildState createState() => _DigitalClockBuildState();
+}
+
+class _DigitalClockBuildState extends State<DigitalClockBuild> {
+  var _formattedTime = DateFormat('HH:mm').format(DateTime.now());
+
+  @override
+  void initState() {
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      var previousMinute = DateTime.now().add(Duration(seconds: -1)).minute;
+      var currentMinute = DateTime.now().minute;
+      if (currentMinute != previousMinute)
+        setState(() {
+          _formattedTime = DateFormat('HH:mm').format(DateTime.now());
+        });
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      _formattedTime,
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 50.0,
+      ),
     );
   }
 }
