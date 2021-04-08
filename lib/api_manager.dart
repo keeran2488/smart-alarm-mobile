@@ -11,7 +11,7 @@ class ApiManager {
 
     try {
       var response = await client.get(
-          'http://newsapi.org/v2/top-headlines?language=en&apiKey=a58184c8b6014a9ea17772a36ff15f01');
+          'https://newsapi.org/v2/top-headlines?language=en&apiKey=a58184c8b6014a9ea17772a36ff15f01');
       if (response.statusCode == 200) {
         var jsonString = response.body;
         var jsonMap = json.decode(jsonString);
