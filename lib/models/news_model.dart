@@ -9,14 +9,14 @@ String newsModelToJson(NewsModel data) => json.encode(data.toJson());
 
 class NewsModel {
   NewsModel({
-    this.status,
-    this.totalResults,
-    this.articles,
+    required this.status,
+    required this.totalResults,
+    required this.articles,
   });
 
-  String status;
-  int totalResults;
-  List<Article> articles;
+  final String status;
+  final int totalResults;
+  final List<Article> articles;
 
   factory NewsModel.fromJson(Map<String, dynamic> json) => NewsModel(
         status: json["status"],
@@ -34,28 +34,28 @@ class NewsModel {
 
 class Article {
   Article({
-    this.source,
-    this.author,
-    this.title,
-    this.description,
-    this.url,
-    this.urlToImage,
-    this.publishedAt,
-    this.content,
+    required this.source,
+    required this.author,
+    required this.title,
+    required this.description,
+    required this.url,
+    required this.urlToImage,
+    required this.publishedAt,
+    required this.content,
   });
 
-  Source source;
-  String author;
-  String title;
-  String description;
-  String url;
-  String urlToImage;
-  DateTime publishedAt;
-  String content;
+  final Source source;
+  final String author;
+  final String title;
+  final String description;
+  final String url;
+  final String urlToImage;
+  final DateTime publishedAt;
+  final String content;
 
   factory Article.fromJson(Map<String, dynamic> json) => Article(
         source: Source.fromJson(json["source"]),
-        author: json["author"] == null ? null : json["author"],
+        author: json["author"] == null ? '-' : json["author"],
         title: json["title"],
         description:
             json["description"] == null ? json["content"] : json["description"],
@@ -64,12 +64,13 @@ class Article {
             ? "https://www.dia.org/sites/default/files/No_Img_Avail.jpg"
             : json["urlToImage"],
         publishedAt: DateTime.parse(json["publishedAt"]),
-        content: json["content"],
+        content:
+            json["content"] == null ? json["description"] : json["content"],
       );
 
   Map<String, dynamic> toJson() => {
         "source": source.toJson(),
-        "author": author == null ? null : author,
+        "author": author,
         "title": title,
         "description": description,
         "url": url,
@@ -85,17 +86,17 @@ class Source {
     this.name,
   });
 
-  Id id;
-  Name name;
+  Id? id;
+  Name? name;
 
   factory Source.fromJson(Map<String, dynamic> json) => Source(
-        id: idValues.map[json["id"]],
-        name: nameValues.map[json["name"]],
+        id: idValues.map![json["id"]],
+        name: nameValues.map![json["name"]],
       );
 
   Map<String, dynamic> toJson() => {
-        "id": idValues.reverse[id],
-        "name": nameValues.reverse[name],
+        "id": idValues.reverse![id],
+        "name": nameValues.reverse![name],
       };
 }
 
@@ -110,14 +111,14 @@ final nameValues =
     EnumValues({"The Wall Street Journal": Name.THE_WALL_STREET_JOURNAL});
 
 class EnumValues<T> {
-  Map<String, T> map;
-  Map<T, String> reverseMap;
+  Map<String, T>? map;
+  Map<T, String>? reverseMap;
 
   EnumValues(this.map);
 
-  Map<T, String> get reverse {
+  Map<T, String>? get reverse {
     if (reverseMap == null) {
-      reverseMap = map.map((k, v) => new MapEntry(v, k));
+      reverseMap = map!.map((k, v) => new MapEntry(v, k));
     }
     return reverseMap;
   }

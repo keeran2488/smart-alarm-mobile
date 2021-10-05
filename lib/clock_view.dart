@@ -58,7 +58,7 @@ class ClockPainter extends CustomPainter {
 
     //brush style for second hand
     var secHandBrush = Paint()
-      ..color = Colors.orange[300]
+      ..color = Color(0xFFFFB74D)
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 5;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smartClockFinal/api_manager.dart';
-import 'package:smartClockFinal/news_model.dart';
+import 'package:smartClockFinal/api/api_news.dart';
+import 'package:smartClockFinal/models/news_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -10,7 +10,7 @@ class NewsPage extends StatefulWidget {
 }
 
 class _NewsPageState extends State<NewsPage> {
-  Future<NewsModel> _newsModel;
+  late Future<NewsModel> _newsModel;
 
   @override
   void initState() {
@@ -34,11 +34,11 @@ class _NewsPageState extends State<NewsPage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
-                  itemCount: snapshot.data.articles.length,
+                  itemCount: snapshot.data!.articles.length,
                   itemBuilder: (context, index) {
-                    var article = snapshot.data.articles[index];
+                    var article = snapshot.data!.articles[index];
                     return Card(
-                      margin: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 15.0),
+                      margin: EdgeInsets.all(8.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -63,7 +63,7 @@ class _NewsPageState extends State<NewsPage> {
                                   maxLines: 3,
                                   overflow: TextOverflow.fade,
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
+                                      color: Colors.white, fontSize: 17),
                                 ),
                                 onTap: () {
                                   _lauchURL(article.url);
@@ -76,7 +76,7 @@ class _NewsPageState extends State<NewsPage> {
                                 article.description,
                                 maxLines: 3,
                                 style:
-                                    TextStyle(color: Colors.grey, fontSize: 16),
+                                    TextStyle(color: Colors.grey, fontSize: 14),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
