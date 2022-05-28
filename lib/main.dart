@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:smartClockFinal/alarm/alarm_page.dart';
-import 'package:smartClockFinal/clock_page.dart';
 import 'package:smartClockFinal/rooms.dart';
 import 'package:smartClockFinal/news_page.dart';
 import 'package:smartClockFinal/task/automated_task_page.dart';

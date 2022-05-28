@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:smartClockFinal/api/api_home.dart';
 
 import 'models/home_model.dart';

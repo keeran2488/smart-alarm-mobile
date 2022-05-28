@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class Room {
   final int id;
   final String name;

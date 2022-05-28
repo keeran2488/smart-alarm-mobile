@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:smartClockFinal/api/api_home.dart';
+import 'package:smartClockFinal/api/urls.dart';
 import 'package:smartClockFinal/devices.dart';
 import 'package:smartClockFinal/models/home_model.dart';
 
@@ -11,6 +14,24 @@ class Rooms extends StatefulWidget {
 
 class _RoomsState extends State<Rooms> {
   late Future<List<Room>> futureRoom;
+  bool rpiActive = false;
+
+  void checkRpiConnection() async {
+    try {
+      final result = await InternetAddress.lookup(serverUrl);
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          rpiActive = true;
+        });
+        getRoom();
+      }
+    } on SocketException catch (_) {
+      debugPrint('Status: ${rpiActive.toString()}');
+      setState(() {
+        rpiActive = false;
+      });
+    }
+  }
 
   getRoom() async {
     futureRoom = fetchRoom();
@@ -19,7 +40,7 @@ class _RoomsState extends State<Rooms> {
   @override
   void initState() {
     super.initState();
-    getRoom();
+    checkRpiConnection();
   }
 
   @override
@@ -37,7 +58,7 @@ class _RoomsState extends State<Rooms> {
         floatingActionButton: FloatingActionButton.extended(
           label: Text("Add room"),
           icon: Icon(Icons.add),
-          backgroundColor: Color(0xff1f1f24),
+          backgroundColor: rpiActive ? Colors.blue : Colors.grey,
           onPressed: () {
             showModalBottomSheet<dynamic>(
               isScrollControlled: true,
@@ -85,67 +106,89 @@ class _RoomsState extends State<Rooms> {
             ),
           ],
         ),
-        body: FutureBuilder<List<Room>>(
-          future: futureRoom,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return GridView.builder(
-                padding: EdgeInsets.all(10.0),
-                itemCount: snapshot.data!.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2),
-                itemBuilder: (context, index) {
-                  return Card(
-                    color: Color(0xff1f1f24),
-                    margin: EdgeInsets.all(8.0),
-                    child: InkWell(
-                      onTap: () {
-                        String title = snapshot.data![index].name.toString();
-                        int id = snapshot.data![index].id;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Devices(title: title, id: id),
-                          ),
-                        ).then(
-                          (value) => setState(
-                            () {
-                              getRoom();
+        body: rpiActive
+            ? FutureBuilder<List<Room>>(
+                future: futureRoom,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return GridView.builder(
+                      padding: EdgeInsets.all(10.0),
+                      itemCount: snapshot.data!.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2),
+                      itemBuilder: (context, index) {
+                        return Card(
+                          color: Color(0xff1f1f24),
+                          margin: EdgeInsets.all(8.0),
+                          child: InkWell(
+                            onTap: () {
+                              String title =
+                                  snapshot.data![index].name.toString();
+                              int id = snapshot.data![index].id;
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      Devices(title: title, id: id),
+                                ),
+                              ).then(
+                                (value) => setState(
+                                  () {
+                                    getRoom();
+                                  },
+                                ),
+                              );
                             },
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 20.0),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    snapshot.data![index].name.toString(),
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  SizedBox(
+                                    height: 35.0,
+                                  ),
+                                  Icon(
+                                    IconData(snapshot.data![index].iconData,
+                                        fontFamily: "MaterialIcons"),
+                                    color: Colors.white,
+                                    size: 70.0,
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         );
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 20.0),
-                        child: Column(
-                          children: [
-                            Text(
-                              snapshot.data![index].name.toString(),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            SizedBox(
-                              height: 35.0,
-                            ),
-                            Icon(
-                              IconData(snapshot.data![index].iconData,
-                                  fontFamily: "MaterialIcons"),
-                              color: Colors.white,
-                              size: 70.0,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    );
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(),
                   );
                 },
-              );
-            }
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          },
-        ),
+              )
+            : AlertDialog(
+                title: const Text('No Active Connection'),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: const <Widget>[
+                      Text(
+                          'Make sure this deivce and RaspberryPi are on same network.'),
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('Retry'),
+                    onPressed: () {
+                      checkRpiConnection();
+                    },
+                  ),
+                ],
+              ),
       ),
     );
   }

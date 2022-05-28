@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:mobx/mobx.dart';
 import 'package:smartClockFinal/api/api_home.dart';
 import 'package:smartClockFinal/api/api_task.dart';
-import 'package:smartClockFinal/api/urls.dart';
 import 'package:smartClockFinal/models/automated_task.dart';
 import 'package:smartClockFinal/models/home_model.dart';
 import 'package:smartClockFinal/models/task_model.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class DeviceList extends StatefulWidget {
-  Room room;
-  Task task;
+  final Room room;
+  final Task task;
   DeviceList({Key? key, required this.room, required this.task})
       : super(key: key);
 
@@ -75,7 +73,7 @@ class _DeviceListState extends State<DeviceList> {
 }
 
 class RoomList extends StatefulWidget {
-  Room room;
+  final Room room;
   RoomList({Key? key, required this.room}) : super(key: key);
 
   @override
@@ -135,9 +133,9 @@ class _RoomListState extends State<RoomList> {
 }
 
 class TaskWidget extends StatefulWidget {
-  List<Task> task;
-  int index;
-  VoidCallback callback;
+  final List<Task> task;
+  final int index;
+  final VoidCallback callback;
   TaskWidget(
       {Key? key,
       required this.task,
@@ -331,8 +329,8 @@ class _TasksState extends State<Tasks> {
 }
 
 class TaskAddForm extends StatefulWidget {
-  VoidCallback callback;
-  int? automatedTaskId;
+  final VoidCallback callback;
+  final int? automatedTaskId;
   TaskAddForm({Key? key, required this.automatedTaskId, required this.callback})
       : super(key: key);
 

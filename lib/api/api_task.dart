@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:smartClockFinal/api/urls.dart';
 import 'package:smartClockFinal/models/automated_task.dart';
 import 'package:smartClockFinal/models/task_model.dart';
-import 'package:smartClockFinal/task/automated_task_page.dart';
 
 Future<Task> createTask(Task task) async {
   final response = await http.post(Uri.parse(taskUrl),
