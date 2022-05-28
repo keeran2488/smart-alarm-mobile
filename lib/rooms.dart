@@ -163,8 +163,12 @@ class _RoomFormState extends State<RoomForm> {
   IconData _iconData = IconData(57411, fontFamily: 'MaterialIcons');
 
   _pickIcon() async {
-    IconData? _icon = await FlutterIconPicker.showIconPicker(context,
-        iconPackMode: IconPack.material);
+    IconData? _icon = await FlutterIconPicker.showIconPicker(
+      context,
+      iconPackModes: [
+        IconPack.material,
+      ],
+    );
     if (_icon != null) {
       setState(() {});
       _iconData = _icon;
